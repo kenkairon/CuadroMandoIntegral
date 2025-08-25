@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuadro de Mando Integral (BSC)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .perspective-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid #0d6efd;
+        }
+
+        .perspective-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .financial {
+            border-left-color: #0d6efd !important;
+        }
+
+        .customer {
+            border-left-color: #198754 !important;
+        }
+
+        .internal {
+            border-left-color: #fd7e14 !important;
+        }
+
+        .learning {
+            border-left-color: #6f42c1 !important;
+        }
+
+        .indicator-card {
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .progress {
+            height: 10px;
+        }
+
+        .nav-tabs .nav-link.active {
+            font-weight: 600;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(120deg, #2c3e50, #4ca1af);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 25px;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .metric-badge {
+            font-size: 0.85rem;
+        }
+
+        .action-buttons .btn {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-header">
+        <div class="container">
+            <h1 class="display-5 fw-bold"><i class="fas fa-chart-line me-3"></i>Cuadro de Mando Integral</h1>
+            <p class="lead">Sistema de gestión estratégica para monitorear el desempeño organizacional</p>
+        </div>
+    </div>
+
+    <div class="container mb-5">
+        <ul class="nav nav-tabs mb-4" id="perspectiveTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="financial-tab" data-bs-toggle="tab" data-bs-target="#financial"
+                    type="button" role="tab">
+                    <i class="fas fa-dollar-sign me-2"></i>Financiera
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="customer-tab" data-bs-toggle="tab" data-bs-target="#customer" type="button"
+                    role="tab">
+                    <i class="fas fa-users me-2"></i>Clientes
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="internal-tab" data-bs-toggle="tab" data-bs-target="#internal" type="button"
+                    role="tab">
+                    <i class="fas fa-cogs me-2"></i>Procesos Internos
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="learning-tab" data-bs-toggle="tab" data-bs-target="#learning" type="button"
+                    role="tab">
+                    <i class="fas fa-graduation-cap me-2"></i>Aprendizaje y Crecimiento
+                </button>
+            </li>
+            <li class="nav-item ms-auto">
+                <button class="btn btn-outline-light mt-1" id="viewDashboardBtn">
+                    <i class="fas fa-chart-pie me-2"></i>Vista General
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="perspectiveTabContent">
+            <!-- Perspectiva Financiera -->
+            <div class="tab-pane fade show active" id="financial" role="tabpanel">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="text-primary"><i class="fas fa-dollar-sign me-2"></i>Perspectiva Financiera</h3>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addIndicatorModal"
+                        data-perspective="financial">
+                        <i class="fas fa-plus me-2"></i>Agregar Indicador
+                    </button>
+                </div>
+                <div class="row" id="financial-indicators">
+                    <!-- Los indicadores se cargarán aquí dinámicamente -->
+                </div>
+            </div>
+
+            <!-- Perspectiva de Clientes -->
+            <div class="tab-pane fade" id="customer" role="tabpanel">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="text-success"><i class="fas fa-users me-2"></i>Perspectiva de Clientes</h3>
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addIndicatorModal"
+                        data-perspective="customer">
+                        <i class="fas fa-plus me-2"></i>Agregar Indicador
+                    </button>
+                </div>
+                <div class="row" id="customer-indicators">
+                    <!-- Los indicadores se cargarán aquí dinámicamente -->
+                </div>
+            </div>
+
+            <!-- Perspectiva de Procesos Internos -->
+            <div class="tab-pane fade" id="internal" role="tabpanel">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="text-warning"><i class="fas fa-cogs me-2"></i>Perspectiva de Procesos Internos</h3>
+                    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#addIndicatorModal"
+                        data-perspective="internal">
+                        <i class="fas fa-plus me-2"></i>Agregar Indicador
+                    </button>
+                </div>
+                <div class="row" id="internal-indicators">
+                    <!-- Los indicadores se cargarán aquí dinámicamente -->
+                </div>
+            </div>
+
+            <!-- Perspectiva de Aprendizaje y Crecimiento -->
+            <div class="tab-pane fade" id="learning" role="tabpanel">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="text-purple"><i class="fas fa-graduation-cap me-2"></i>Perspectiva de Aprendizaje y
+                        Crecimiento</h3>
+                    <button class="btn btn-purple" data-bs-toggle="modal" data-bs-target="#addIndicatorModal"
+                        data-perspective="learning" style="background-color: #6f42c1; color: white;">
+                        <i class="fas fa-plus me-2"></i>Agregar Indicador
+                    </button>
+                </div>
+                <div class="row" id="learning-indicators">
+                    <!-- Los indicadores se cargarán aquí dinámicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para agregar/editar indicador -->
+    <div class="modal fade" id="addIndicatorModal" tabindex="-1" aria-labelledby="addIndicatorModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addIndicatorModalLabel">Agregar Nuevo Indicador</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="indicatorForm">
+                        <input type="hidden" id="indicatorId">
+                        <input type="hidden" id="perspectiveType">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="indicatorName" class="form-label">Nombre del Indicador</label>
+                                <input type="text" class="form-control" id="indicatorName" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="indicatorTarget" class="form-label">Meta</label>
+                                <input type="text" class="form-control" id="indicatorTarget" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="currentValue" class="form-label">Valor Actual</label>
+                                <input type="number" class="form-control" id="currentValue" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="targetValue" class="form-label">Valor Objetivo</label>
+                                <input type="number" class="form-control" id="targetValue" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="indicatorDescription" class="form-label">Descripción</label>
+                            <textarea class="form-control" id="indicatorDescription" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="indicatorFormula" class="form-label">Fórmula de Cálculo</label>
+                            <input type="text" class="form-control" id="indicatorFormula">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="indicatorFrequency" class="form-label">Frecuencia de Medición</label>
+                                <select class="form-select" id="indicatorFrequency">
+                                    <option value="diaria">Diaria</option>
+                                    <option value="semanal">Semanal</option>
+                                    <option value="mensual" selected>Mensual</option>
+                                    <option value="trimestral">Trimestral</option>
+                                    <option value="anual">Anual</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="indicatorResponsible" class="form-label">Responsable</label>
+                                <input type="text" class="form-control" id="indicatorResponsible">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="saveIndicatorBtn">Guardar Indicador</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para vista de dashboard -->
+    <div class="modal fade" id="dashboardModal" tabindex="-1" aria-labelledby="dashboardModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="dashboardModalLabel">Vista General del Cuadro de Mando</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="card perspective-card financial mb-4">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Financiera</h5>
+                                    <h2 class="text-primary" id="financial-score">0%</h2>
+                                    <p class="card-text">Cumplimiento general</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card perspective-card customer mb-4">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Clientes</h5>
+                                    <h2 class="text-success" id="customer-score">0%</h2>
+                                    <p class="card-text">Cumplimiento general</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card perspective-card internal mb-4">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Procesos Internos</h5>
+                                    <h2 class="text-warning" id="internal-score">0%</h2>
+                                    <p class="card-text">Cumplimiento general</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card perspective-card learning mb-4">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Aprendizaje</h5>
+                                    <h2 class="text-purple" id="learning-score">0%</h2>
+                                    <p class="card-text">Cumplimiento general</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5>Resumen de Indicadores por Perspectiva</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="scoreChart" height="100"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5>Indicadores Críticos</h5>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="onlyCriticalToggle">
+                                <label class="form-check-label" for="onlyCriticalToggle">Solo indicadores
+                                    críticos</label>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="criticalIndicatorsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Indicador</th>
+                                            <th>Perspectiva</th>
+                                            <th>Progreso</th>
+                                            <th>Estado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Los datos se cargarán dinámicamente -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="exportDashboardBtn">
+                        <i class="fas fa-download me-2"></i>Exportar Reporte
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        // Datos de ejemplo para demostración
+        const sampleData = {
+            financial: [
+                {
+                    id: 1,
+                    name: "ROI (Retorno de Inversión)",
+                    target: "Incrementar ROI en 15%",
+                    current: 12,
+                    targetValue: 15,
+                    description: "Medir el retorno de inversión de los proyectos estratégicos",
+                    formula: "(Ganancia - Inversión) / Inversión",
+                    frequency: "trimestral",
+                    responsible: "Finanzas"
+                },
+                {
+                    id: 2,
+                    name: "Crecimiento de Ingresos",
+                    target: "Aumentar ingresos en 20%",
+                    current: 18,
+                    targetValue: 20,
+                    description: "Crecimiento interanual de los ingresos totales",
+                    formula: "(Ingresos Año Actual - Ingresos Año Anterior) / Ingresos Año Anterior",
+                    frequency: "mensual",
+                    responsible: "Ventas"
+                }
+            ],
+            customer: [
+                {
+                    id: 1,
+                    name: "Satisfacción del Cliente",
+                    target: "Alcanzar 90% de satisfacción",
+                    current: 85,
+                    targetValue: 90,
+                    description: "Medición mediante encuestas de satisfacción",
+                    formula: "Clientes Satisfechos / Total Clientes Encuestados",
+                    frequency: "trimestral",
+                    responsible: "Atención al Cliente"
+                },
+                {
+                    id: 2,
+                    name: "Tasa de Retención",
+                    target: "Mantener tasa de retención >85%",
+                    current: 82,
+                    targetValue: 85,
+                    description: "Porcentaje de clientes que renuevan sus servicios",
+                    formula: "Clientes que Renuevan / Total Clientes",
+                    frequency: "mensual",
+                    responsible: "Ventas"
+                }
+            ],
+            internal: [
+                {
+                    id: 1,
+                    name: "Tiempo de Ciclo de Producción",
+                    target: "Reducir a 5 días",
+                    current: 6,
+                    targetValue: 5,
+                    description: "Tiempo promedio desde orden de producción hasta entrega",
+                    formula: "Tiempo Total de Producción / Número de Unidades",
+                    frequency: "semanal",
+                    responsible: "Producción"
+                }
+            ],
+            learning: [
+                {
+                    id: 1,
+                    name: "Horas de Capacitación",
+                    target: "40 horas por empleado anuales",
+                    current: 32,
+                    targetValue: 40,
+                    description: "Horas de capacitación por empleado por año",
+                    formula: "Total Horas Capacitación / Número de Empleados",
+                    frequency: "anual",
+                    responsible: "RH"
+                }
+            ]
+        };
+
+        // Almacenamiento local para los indicadores
+        let indicators = JSON.parse(localStorage.getItem('bscIndicators')) || sampleData;
+
+        // Inicializar la aplicación
+        document.addEventListener('DOMContentLoaded', function () {
+            initializeApp();
+        });
+
+        function initializeApp() {
+            // Cargar indicadores en la interfaz
+            loadIndicators();
+
+            // Configurar event listeners
+            document.getElementById('saveIndicatorBtn').addEventListener('click', saveIndicator);
+            document.getElementById('viewDashboardBtn').addEventListener('click', showDashboard);
+            document.getElementById('exportDashboardBtn').addEventListener('click', exportDashboard);
+            document.getElementById('onlyCriticalToggle').addEventListener('change', toggleCriticalIndicators);
+
+            // Configurar el modal para capturar la perspectiva
+            const addIndicatorModal = document.getElementById('addIndicatorModal');
+            addIndicatorModal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget;
+                const perspective = button.getAttribute('data-perspective');
+                document.getElementById('perspectiveType').value = perspective;
+
+                // Reiniciar formulario
+                document.getElementById('indicatorForm').reset();
+                document.getElementById('indicatorId').value = '';
+                document.getElementById('addIndicatorModalLabel').textContent = 'Agregar Nuevo Indicador';
+            });
+        }
+
+        function loadIndicators() {
+            // Guardar en localStorage para persistencia
+            localStorage.setItem('bscIndicators', JSON.stringify(indicators));
+
+            // Cargar indicadores para cada perspectiva
+            loadPerspectiveIndicators('financial');
+            loadPerspectiveIndicators('customer');
+            loadPerspectiveIndicators('internal');
+            loadPerspectiveIndicators('learning');
+        }
+
+        function loadPerspectiveIndicators(perspective) {
+            const container = document.getElementById(`${perspective}-indicators`);
+            container.innerHTML = '';
+
+            if (indicators[perspective].length === 0) {
+                container.innerHTML = `
+                    <div class="col-12">
+                        <div class="alert alert-info text-center">
+                            <i class="fas fa-info-circle me-2"></i>No hay indicadores definidos para esta perspectiva.
+                            <br><button class="btn btn-sm btn-outline-primary mt-2" data-bs-toggle="modal" data-bs-target="#addIndicatorModal" data-perspective="${perspective}">
+                                Agregar el primer indicador
+                            </button>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            indicators[perspective].forEach(indicator => {
+                const progress = Math.min(100, (indicator.current / indicator.targetValue) * 100);
+                const progressClass = progress >= 90 ? 'bg-success' : (progress >= 70 ? 'bg-warning' : 'bg-danger');
+
+                const card = `
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card indicator-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h5 class="card-title">${indicator.name}</h5>
+                                    <span class="metric-badge badge ${progressClass}">${progress.toFixed(0)}%</span>
+                                </div>
+                                <h6 class="card-subtitle mb-2 text-muted">${indicator.target}</h6>
+                                <p class="card-text small">${indicator.description}</p>
+                                
+                                <div class="mb-2">
+                                    <div class="d-flex justify-content-between">
+                                        <span>Progreso: ${indicator.current} / ${indicator.targetValue}</span>
+                                        <span>${progress.toFixed(0)}%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar ${progressClass}" role="progressbar" 
+                                            style="width: ${progress}%" aria-valuenow="${progress}" 
+                                            aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex flex-wrap gap-1 mb-2">
+                                    <span class="badge bg-light text-dark"><i class="fas fa-repeat me-1"></i>${indicator.frequency}</span>
+                                    <span class="badge bg-light text-dark"><i class="fas fa-user me-1"></i>${indicator.responsible}</span>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-transparent action-buttons d-flex justify-content-between">
+                                <button class="btn btn-sm btn-outline-primary edit-btn" data-id="${indicator.id}" data-perspective="${perspective}">
+                                    <i class="fas fa-edit me-1"></i>Editar
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger delete-btn" data-id="${indicator.id}" data-perspective="${perspective}">
+                                    <i class="fas fa-trash me-1"></i>Eliminar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                container.innerHTML += card;
+            });
+
+            // Añadir event listeners para botones de editar y eliminar
+            container.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const id = this.getAttribute('data-id');
+                    const perspective = this.getAttribute('data-perspective');
+                    editIndicator(id, perspective);
+                });
+            });
+
+            container.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const id = this.getAttribute('data-id');
+                    const perspective = this.getAttribute('data-perspective');
+                    deleteIndicator(id, perspective);
+                });
+            });
+        }
+
+        function saveIndicator() {
+            const form = document.getElementById('indicatorForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const perspective = document.getElementById('perspectiveType').value;
+            const id = document.getElementById('indicatorId').value;
+            const indicator = {
+                id: id ? parseInt(id) : Date.now(),
+                name: document.getElementById('indicatorName').value,
+                target: document.getElementById('indicatorTarget').value,
+                current: parseFloat(document.getElementById('currentValue').value),
+                targetValue: parseFloat(document.getElementById('targetValue').value),
+                description: document.getElementById('indicatorDescription').value,
+                formula: document.getElementById('indicatorFormula').value,
+                frequency: document.getElementById('indicatorFrequency').value,
+                responsible: document.getElementById('indicatorResponsible').value
+            };
+
+            if (id) {
+                // Editar indicador existente
+                const index = indicators[perspective].findIndex(i => i.id === parseInt(id));
+                if (index !== -1) {
+                    indicators[perspective][index] = indicator;
+                }
+            } else {
+                // Agregar nuevo indicador
+                indicators[perspective].push(indicator);
+            }
+
+            // Actualizar la interfaz y cerrar el modal
+            loadIndicators();
+            bootstrap.Modal.getInstance(document.getElementById('addIndicatorModal')).hide();
+        }
+
+        function editIndicator(id, perspective) {
+            const indicator = indicators[perspective].find(i => i.id === parseInt(id));
+            if (!indicator) return;
+
+            // Llenar el formulario con los datos del indicador
+            document.getElementById('indicatorId').value = indicator.id;
+            document.getElementById('perspectiveType').value = perspective;
+            document.getElementById('indicatorName').value = indicator.name;
+            document.getElementById('indicatorTarget').value = indicator.target;
+            document.getElementById('currentValue').value = indicator.current;
+            document.getElementById('targetValue').value = indicator.targetValue;
+            document.getElementById('indicatorDescription').value = indicator.description;
+            document.getElementById('indicatorFormula').value = indicator.formula;
+            document.getElementById('indicatorFrequency').value = indicator.frequency;
+            document.getElementById('indicatorResponsible').value = indicator.responsible;
+
+            // Actualizar título del modal
+            document.getElementById('addIndicatorModalLabel').textContent = 'Editar Indicador';
+
+            // Mostrar el modal
+            const modal = new bootstrap.Modal(document.getElementById('addIndicatorModal'));
+            modal.show();
+        }
+
+        function deleteIndicator(id, perspective) {
+            if (!confirm('¿Está seguro de que desea eliminar este indicador?')) return;
+
+            indicators[perspective] = indicators[perspective].filter(i => i.id !== parseInt(id));
+            loadIndicators();
+        }
+
+        function showDashboard() {
+            // Calcular puntuaciones generales
+            document.getElementById('financial-score').textContent = calculatePerspectiveScore('financial') + '%';
+            document.getElementById('customer-score').textContent = calculatePerspectiveScore('customer') + '%';
+            document.getElementById('internal-score').textContent = calculatePerspectiveScore('internal') + '%';
+            document.getElementById('learning-score').textContent = calculatePerspectiveScore('learning') + '%';
+
+            // Actualizar tabla de indicadores críticos
+            updateCriticalIndicatorsTable();
+
+            // Mostrar el modal del dashboard
+            const modal = new bootstrap.Modal(document.getElementById('dashboardModal'));
+            modal.show();
+
+            // Inicializar gráfico después de que el modal se muestre
+            setTimeout(initializeChart, 500);
+        }
+
+        function calculatePerspectiveScore(perspective) {
+            if (indicators[perspective].length === 0) return 0;
+
+            let totalProgress = 0;
+            indicators[perspective].forEach(indicator => {
+                const progress = Math.min(100, (indicator.current / indicator.targetValue) * 100);
+                totalProgress += progress;
+            });
+
+            return (totalProgress / indicators[perspective].length).toFixed(1);
+        }
+
+        function initializeChart() {
+            const ctx = document.getElementById('scoreChart').getContext('2d');
+
+            if (window.scoreChartInstance) {
+                window.scoreChartInstance.destroy();
+            }
+
+            window.scoreChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Financiera', 'Clientes', 'Procesos Internos', 'Aprendizaje'],
+                    datasets: [{
+                        label: 'Porcentaje de Cumplimiento',
+                        data: [
+                            calculatePerspectiveScore('financial'),
+                            calculatePerspectiveScore('customer'),
+                            calculatePerspectiveScore('internal'),
+                            calculatePerspectiveScore('learning')
+                        ],
+                        backgroundColor: [
+                            '#0d6efd', // Azul
+                            '#198754', // Verde
+                            '#fd7e14', // Naranja
+                            '#6f42c1'  // Púrpura
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function (value) {
+                                    return value + '%';
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return context.dataset.label + ': ' + context.raw + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateCriticalIndicatorsTable() {
+            const tableBody = document.querySelector('#criticalIndicatorsTable tbody');
+            tableBody.innerHTML = '';
+
+            // Recopilar todos los indicadores
+            let allIndicators = [];
+            Object.keys(indicators).forEach(perspective => {
+                indicators[perspective].forEach(indicator => {
+                    allIndicators.push({
+                        ...indicator,
+                        perspective: perspective
+                    });
+                });
+            });
+
+            // Filtrar si es necesario y ordenar por progreso (ascendente)
+            const onlyCritical = document.getElementById('onlyCriticalToggle').checked;
+            let filteredIndicators = onlyCritical
+                ? allIndicators.filter(i => (i.current / i.targetValue) * 100 < 70)
+                : allIndicators;
+
+            filteredIndicators.sort((a, b) => {
+                return (a.current / a.targetValue) - (b.current / b.targetValue);
+            });
+
+            // Llenar la tabla
+            filteredIndicators.forEach(indicator => {
+                const progress = (indicator.current / indicator.targetValue) * 100;
+                const progressClass = progress >= 90 ? 'bg-success' : (progress >= 70 ? 'bg-warning' : 'bg-danger');
+                const perspectiveNames = {
+                    'financial': 'Financiera',
+                    'customer': 'Clientes',
+                    'internal': 'Procesos Internos',
+                    'learning': 'Aprendizaje'
+                };
+
+                const row = `
+                    <tr>
+                        <td>${indicator.name}</td>
+                        <td>${perspectiveNames[indicator.perspective]}</td>
+                        <td>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar ${progressClass}" role="progressbar" 
+                                    style="width: ${progress}%" aria-valuenow="${progress}" 
+                                    aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </td>
+                        <td><span class="badge ${progressClass}">${progress.toFixed(1)}%</span></td>
+                    </tr>
+                `;
+
+                tableBody.innerHTML += row;
+            });
+
+            if (filteredIndicators.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="text-center text-muted py-4">
+                            <i class="fas fa-check-circle fa-2x mb-2"></i>
+                            <p>No hay indicadores críticos</p>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        function toggleCriticalIndicators() {
+            updateCriticalIndicatorsTable();
+        }
+
+        function exportDashboard() {
+            // Simular exportación de reporte
+            alert('Funcionalidad de exportación activada. En una implementación real, esto generaría un reporte en PDF o Excel.');
+        }
+    </script>
+</body>
+
+</html>
